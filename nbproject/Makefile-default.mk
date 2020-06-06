@@ -57,17 +57,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=
+SOURCEFILES_QUOTED_IF_SPACED=ED2TPFINAL_src.asm
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=
-POSSIBLE_DEPFILES=
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/ED2TPFINAL_src.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/ED2TPFINAL_src.o.d
 
 # Object Files
-OBJECTFILES=
+OBJECTFILES=${OBJECTDIR}/ED2TPFINAL_src.o
 
 # Source Files
-SOURCEFILES=
+SOURCEFILES=ED2TPFINAL_src.asm
 
 
 
@@ -95,7 +95,23 @@ MP_LINKER_DEBUG_OPTION=
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: assemble
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
+${OBJECTDIR}/ED2TPFINAL_src.o: ED2TPFINAL_src.asm  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/ED2TPFINAL_src.o.d 
+	@${RM} ${OBJECTDIR}/ED2TPFINAL_src.o 
+	@${FIXDEPS} dummy.d -e "${OBJECTDIR}/ED2TPFINAL_src.err" $(SILENT) -c ${MP_AS} $(MP_EXTRA_AS_PRE) -d__DEBUG -d__MPLAB_DEBUGGER_SIMULATOR=1 -q -p$(MP_PROCESSOR_OPTION)  -l\"${OBJECTDIR}/ED2TPFINAL_src.lst\" -e\"${OBJECTDIR}/ED2TPFINAL_src.err\" $(ASM_OPTIONS)    -o\"${OBJECTDIR}/ED2TPFINAL_src.o\" \"ED2TPFINAL_src.asm\" 
+	@${DEP_GEN} -d "${OBJECTDIR}/ED2TPFINAL_src.o"
+	@${FIXDEPS} "${OBJECTDIR}/ED2TPFINAL_src.o.d" $(SILENT) -rsi ${MP_AS_DIR} -c18 
+	
 else
+${OBJECTDIR}/ED2TPFINAL_src.o: ED2TPFINAL_src.asm  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/ED2TPFINAL_src.o.d 
+	@${RM} ${OBJECTDIR}/ED2TPFINAL_src.o 
+	@${FIXDEPS} dummy.d -e "${OBJECTDIR}/ED2TPFINAL_src.err" $(SILENT) -c ${MP_AS} $(MP_EXTRA_AS_PRE) -q -p$(MP_PROCESSOR_OPTION)  -l\"${OBJECTDIR}/ED2TPFINAL_src.lst\" -e\"${OBJECTDIR}/ED2TPFINAL_src.err\" $(ASM_OPTIONS)    -o\"${OBJECTDIR}/ED2TPFINAL_src.o\" \"ED2TPFINAL_src.asm\" 
+	@${DEP_GEN} -d "${OBJECTDIR}/ED2TPFINAL_src.o"
+	@${FIXDEPS} "${OBJECTDIR}/ED2TPFINAL_src.o.d" $(SILENT) -rsi ${MP_AS_DIR} -c18 
+	
 endif
 
 # ------------------------------------------------------------------------------------
