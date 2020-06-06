@@ -8,4 +8,10 @@ LIST P=16F887
  __CONFIG _CONFIG2, _BOR4V_BOR40V & _WRT_OFF
 #include "p16f887.inc"
 
+ 
+org 0x00 
 
+INIT
+    goto INIT
+    
+    END
