@@ -1,2 +1,7 @@
-Warning[205] C:\USERS\NACHO\DOCUMENTS\FACULTAD\4TO\ED2\MPLAB PROJECTS\ED2TPFINAL.X\ED2TPFINAL_SRC.ASM 1 : Found directive in column 1. (LIST)
-Warning[205] C:\USERS\NACHO\DOCUMENTS\FACULTAD\4TO\ED2\MPLAB PROJECTS\ED2TPFINAL.X\ED2TPFINAL_SRC.ASM 12 : Found directive in column 1. (org)
+Message[302] C:\USERS\NACHO\DOCUMENTS\FACULTAD\4TO\ED2\MPLAB PROJECTS\ED2TPFINAL.X\ED2TPFINAL_SRC.ASM 33 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\NACHO\DOCUMENTS\FACULTAD\4TO\ED2\MPLAB PROJECTS\ED2TPFINAL.X\ED2TPFINAL_SRC.ASM 34 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\NACHO\DOCUMENTS\FACULTAD\4TO\ED2\MPLAB PROJECTS\ED2TPFINAL.X\ED2TPFINAL_SRC.ASM 35 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\NACHO\DOCUMENTS\FACULTAD\4TO\ED2\MPLAB PROJECTS\ED2TPFINAL.X\ED2TPFINAL_SRC.ASM 37 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\NACHO\DOCUMENTS\FACULTAD\4TO\ED2\MPLAB PROJECTS\ED2TPFINAL.X\ED2TPFINAL_SRC.ASM 41 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\NACHO\DOCUMENTS\FACULTAD\4TO\ED2\MPLAB PROJECTS\ED2TPFINAL.X\ED2TPFINAL_SRC.ASM 44 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] C:\USERS\NACHO\DOCUMENTS\FACULTAD\4TO\ED2\MPLAB PROJECTS\ED2TPFINAL.X\ED2TPFINAL_SRC.ASM 47 : Register in operand not in bank 0.  Ensure that bank bits are correct.
