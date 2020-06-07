@@ -1,4 +1,4 @@
-MPASM 5.87                ED2TPFINAL_SRC.ASM   6-6-2020  18:38:24         PAGE  1
+MPASM 5.87                ED2TPFINAL_SRC.ASM   6-7-2020  13:32:17         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -41,210 +41,312 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
   00000029            00024 DISPLAY2 EQU 0x29
   0000002A            00025 DISPLAY3 EQU 0x2A
   0000002B            00026 CONT_D   EQU 0x2B 
-  0000002C            00027 AUX_DECO EQU 0x2C        
-                      00028    
-                      00029    ORG 0x00  
-0000   2???           00030    GOTO INIT
-                      00031 
-                      00032    ORG 0x04
-0004   2???           00033    GOTO INTERRUPT_SERVE
-                      00034 
-                      00035    ORG 0x05
-0005                  00036 INIT 
-0005   1683 1303      00037    BANKSEL TRISC
-0007   300F           00038    MOVLW 0x0F
+  0000002C            00027 AUX_DECO EQU 0x2C
+  0000002D            00028 DISPCOUNT EQU 0x2D
+  0000002E            00029 AUX_REG EQU 0x2E 
+                      00030    
+                      00031    ORG 0x00  
+0000   2???           00032    GOTO INIT
+                      00033 
+                      00034    ORG 0x04
+0004   2???           00035    GOTO INTERRUPT_SERVE
+                      00036 
+                      00037    ORG 0x05
+0005                  00038 INIT 
+                      00039    ;PUERTOS
+0005   1683 1303      00040    BANKSEL TRISC
+0007   300F           00041    MOVLW 0x0F
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0008   0086           00039    MOVWF TRISB
-Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0009   0187           00040    CLRF TRISC
-MPASM 5.87                ED2TPFINAL_SRC.ASM   6-6-2020  18:38:24         PAGE  2
+MPASM 5.87                ED2TPFINAL_SRC.ASM   6-7-2020  13:32:17         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
+0008   0086           00042    MOVWF TRISB ; TECLADO
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-000A   1381           00041    BCF OPTION_REG, 7 ; ACTIVO PULL UP EN PUERTO B
-000B   300F           00042    MOVLW 0x0F
+0009   0188           00043    CLRF TRISD ; SALIDA DE LOS DISPLAYS
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-000C   0095           00043    MOVWF WPUB ; ACTIVO PULL UP EN PINES DE ENTRADA
-000D   178B           00044    BSF INTCON, GIE ; ACTIVO INTERRUPCIONES GLOBALES
-000E   158B           00045    BSF INTCON, RBIE ; ACTIVO INTERRUPCIONES POR PUERTO B
-000F   300F           00046    MOVLW 0x0F
+000A   0185           00044    CLRF TRISA
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0010   0096           00047    MOVWF IOCB ; ACTIVO INTERRUPCIONES EN LOS PINES PORTB<3:0> SON ENTRADA
-                      00048    
-0011   1683 1303      00049    BANKSEL TRISD
+000B   1381           00045    BCF OPTION_REG, 7 ; ACTIVO PULL UP EN PUERTO B
+000C   300E           00046    MOVLW 0x0E
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0013   0188           00050    CLRF TRISD ; DEBUG
-                      00051    
-0014   1683 1703      00052    BANKSEL ANSELH
+000D   0095           00047    MOVWF WPUB ; ACTIVO PULL UP EN PINES DE ENTRADA
+000E   1683 1703      00048    BANKSEL ANSELH
 Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
-0016   0189           00053    CLRF ANSELH
-                      00054    
-0017   1283 1303      00055    BANKSEL PORTC
-0019   0186           00056    CLRF PORTB
-001A   0187           00057    CLRF PORTC
-001B   1407           00058    BSF PORTC, 0
-001C   01A6           00059    CLRF FLAGS
-001D   1283 1303      00060    BANKSEL PORTD
-001F   0188           00061    CLRF PORTD
-                      00062    
-0020   01AB           00063    CLRF CONT_D
+0010   0189           00049    CLRF ANSELH
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0011   0188           00050    CLRF ANSEL
+0012   1283 1303      00051    BANKSEL PORTC
+0014   0186           00052    CLRF PORTB
+0015   0187           00053    CLRF PORTC
+0016   0188           00054    CLRF PORTD
+0017   0185           00055    CLRF PORTA
+                      00056    
+                      00057    ;REGISTROS
+0018   01A6           00058    CLRF FLAGS
+0019   3027           00059    MOVLW DISPLAY0
+001A   0084           00060    MOVWF FSR; INICIALIZAMOS FSR EN EL PRIMER REGISTRO DE LOS VALORES DE LOS DISPLAYS
+001B   01AB           00061    CLRF CONT_D
+001C   03AB           00062    DECF CONT_D,F ; INICIALIZAMOS EN .255
+001D   01AD           00063    CLRF DISPCOUNT
                       00064    
-0021   2???           00065    GOTO PROGRAMA
-                      00066   
-0022                  00067 PROGRAMA
-0022   2???           00068    CALL CHECK_TECLADO
-0023   1C26           00069    BTFSS FLAGS, INTRB
-0024   2???           00070    GOTO PROGRAMA
-0025   1026           00071    BCF FLAGS, INTRB
-0026   2???           00072    GOTO ACT_DISPLAYS
-                      00073 
-0027                  00074 CHECK_TECLADO
-0027   1C26           00075    BTFSS FLAGS, INTRB
-0028   0008           00076    RETURN
-0029   0806           00077    MOVF PORTB, W
-002A   390F           00078    ANDLW 0x0F
-002B   00A4           00079    MOVWF COL_EN
-002C   00A5           00080    MOVWF COL_EN_T
-002D   01A2           00081    CLRF COLUMN 
-002E   01A3           00082    CLRF ROW
-002F   2???           00083    CALL COL_DEC
-0030   1003           00084    BCF STATUS, C
-0031   0822           00085    MOVF COLUMN, W
-0032   0723           00086    ADDWF ROW, W
-0033   0723           00087    ADDWF ROW, W
-0034   0723           00088    ADDWF ROW, W
-MPASM 5.87                ED2TPFINAL_SRC.ASM   6-6-2020  18:38:24         PAGE  3
+                      00065    ;INTERRUPCIONES
+001E   1683 1303      00066    BANKSEL IOCB
+0020   300E           00067    MOVLW 0x0E
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0021   0096           00068    MOVWF IOCB ; ACTIVO INTERRUPCIONES EN LOS PINES PORTB<3:1> SON ENTRADA
+0022   100B           00069    BCF INTCON, RBIF
+0023   158B           00070    BSF INTCON, RBIE ; ACTIVO INTERRUPCIONES POR PUERTO B
+0024   3004           00071    MOVLW B'00000100' ; PRESCALER A 32
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0025   0081           00072    MOVWF OPTION_REG
+0026   178B           00073    BSF INTCON, GIE ; ACTIVO INTERRUPCIONES GLOBALES
+                      00074    
+                      00075    
+0027   2???           00076    GOTO PROGRAMA
+                      00077   
+0028                  00078 PROGRAMA
+0028   2???           00079    CALL CHECK_TECLADO
+0029   1C26           00080    BTFSS FLAGS, INTRB
+002A   2???           00081    GOTO PROGRAMA
+002B   1026           00082    BCF FLAGS, INTRB
+002C   2???           00083    CALL ACT_DISPLAYS
+                      00084    
+                      00085 
+002D                  00086 CHECK_TECLADO
+MPASM 5.87                ED2TPFINAL_SRC.ASM   6-7-2020  13:32:17         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0035   0087           00089    MOVWF PORTC
-                      00090    ;BCF FLAGS, INTRB
-0036   0008           00091    RETURN
-                      00092    
-0037                  00093 COL_DEC
-0037   0CA5           00094    RRF COL_EN_T, F
-0038   1C03           00095    BTFSS STATUS, C
-0039   2???           00096    GOTO ROW_DEC
-003A   0AA2           00097    INCF COLUMN, F
-003B   3003           00098    MOVLW N_COL
-003C   0222           00099    SUBWF COLUMN, W
-003D   1D03           00100    BTFSS STATUS, Z
-003E   2???           00101    GOTO COL_DEC
-003F   01A2           00102    CLRF COLUMN
-0040   2???           00103    GOTO FINEXP
-0041                  00104 ROW_DEC
-0041   0823           00105    MOVF ROW, W
-0042   2???           00106    CALL EN_ROW
-0043   0086           00107    MOVWF PORTB
-0044   0806           00108    MOVF PORTB, W
-0045   390F           00109    ANDLW 0x0F
-0046   0224           00110    SUBWF COL_EN, W
-0047   1903           00111    BTFSC STATUS, Z
-0048   2???           00112    GOTO FINEXP
-0049   0AA3           00113    INCF ROW, F
-004A   3004           00114    MOVLW N_ROW
-004B   0223           00115    SUBWF ROW, W
-004C   1D03           00116    BTFSS STATUS, Z
-004D   2???           00117    GOTO ROW_DEC
-004E   01A3           00118    CLRF ROW
-004F   2???           00119    GOTO FINEXP
-                      00120 
-0050                  00121 INTERRUPT_SERVE
-0050   00A0           00122    MOVWF W_TEMP
-0051   0E03           00123    SWAPF STATUS,W
-0052   00A1           00124    MOVWF STATUS_TEMP
-0053   1C0B           00125    BTFSS INTCON, RBIF
-0054   2???           00126    GOTO ENDINT
-0055   2???           00127    CALL CHECKBITS
-0056   18A6           00128    BTFSC FLAGS, FLANCO
-0057   2???           00129    GOTO ENDINT
-0058   1426           00130    BSF FLAGS, INTRB
-0059   0806           00131    MOVF PORTB, W
-005A   100B           00132    BCF INTCON, 0
-005B   1408           00133    BSF PORTD, 0
-                      00134    ;GOTO ENDINT
-005C                  00135 ENDINT
-                      00136    
-005C   0EA0           00137    SWAPF W_TEMP,F
-005D   0E20           00138    SWAPF W_TEMP,W
-005E   0E21           00139    SWAPF STATUS_TEMP, W
-005F   0083           00140    MOVWF STATUS
-0060   0009           00141    RETFIE
-MPASM 5.87                ED2TPFINAL_SRC.ASM   6-6-2020  18:38:24         PAGE  4
+002D   1C26           00087    BTFSS FLAGS, INTRB
+002E   0008           00088    RETURN
+002F   0806           00089    MOVF PORTB, W
+0030   390F           00090    ANDLW 0x0F
+0031   00A4           00091    MOVWF COL_EN
+0032   00A5           00092    MOVWF COL_EN_T
+0033   01A2           00093    CLRF COLUMN 
+0034   01A3           00094    CLRF ROW
+0035   2???           00095    CALL COL_DEC
+0036   1003           00096    BCF STATUS, C
+0037   0822           00097    MOVF COLUMN, W
+0038   0723           00098    ADDWF ROW, W
+0039   0723           00099    ADDWF ROW, W
+003A   0723           00100    ADDWF ROW, W
+003B   0087           00101    MOVWF PORTC
+                      00102    ;BCF FLAGS, INTRB
+003C   0008           00103    RETURN
+                      00104    
+003D                  00105 COL_DEC
+003D   0CA5           00106    RRF COL_EN_T, F
+003E   1C03           00107    BTFSS STATUS, C
+003F   2???           00108    GOTO ROW_DEC
+0040   0AA2           00109    INCF COLUMN, F
+0041   3003           00110    MOVLW N_COL
+0042   0222           00111    SUBWF COLUMN, W
+0043   1D03           00112    BTFSS STATUS, Z
+0044   2???           00113    GOTO COL_DEC
+0045   01A2           00114    CLRF COLUMN
+0046   2???           00115    GOTO FINEXP
+0047                  00116 ROW_DEC
+0047   0823           00117    MOVF ROW, W
+0048   2???           00118    CALL EN_ROW
+0049   0086           00119    MOVWF PORTB
+004A   0806           00120    MOVF PORTB, W
+004B   390F           00121    ANDLW 0x0F
+004C   0224           00122    SUBWF COL_EN, W
+004D   1903           00123    BTFSC STATUS, Z
+004E   2???           00124    GOTO FINEXP
+004F   0AA3           00125    INCF ROW, F
+0050   3004           00126    MOVLW N_ROW
+0051   0223           00127    SUBWF ROW, W
+0052   1D03           00128    BTFSS STATUS, Z
+0053   2???           00129    GOTO ROW_DEC
+0054   01A3           00130    CLRF ROW
+0055   2???           00131    GOTO FINEXP
+                      00132 
+0056                  00133 INTERRUPT_SERVE
+0056   00A0           00134    MOVWF W_TEMP
+0057   0E03           00135    SWAPF STATUS,W
+0058   00A1           00136    MOVWF STATUS_TEMP
+0059   190B           00137    BTFSC INTCON, T0IF
+005A   2???           00138    GOTO TMR0_INT
+005B   1C0B           00139    BTFSS INTCON, RBIF
+MPASM 5.87                ED2TPFINAL_SRC.ASM   6-7-2020  13:32:17         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00142    
-0061                  00143 FINEXP
-0061   0186           00144    CLRF PORTB
-0062   1026           00145    BCF FLAGS, INTRB
-0063   0008           00146    RETURN
-                      00147    
-0064                  00148 EN_ROW
-0064   0782           00149    ADDWF PCL, F
-0065   34E0           00150    RETLW 0xE0; COL0
-0066   34D0           00151    RETLW 0xD0; COL1                
-0067   34B0           00152    RETLW 0xB0; COL2
-0068   3470           00153    RETLW 0x70; COL3
-                      00154    
-0069                  00155 CHECKBITS
-0069   14A6           00156    BSF FLAGS, FLANCO ; BIT DE BANDERA DE CAMBIO DE FLANCO
-006A   1C06           00157    BTFSS PORTB, 0
-006B   10A6           00158    BCF FLAGS, FLANCO
-006C   1C86           00159    BTFSS PORTB, 1
-006D   10A6           00160    BCF FLAGS, FLANCO
-006E   1D06           00161    BTFSS PORTB, 2
-006F   10A6           00162    BCF FLAGS, FLANCO
-0070   1D86           00163    BTFSS PORTB, 3
-0071   10A6           00164    BCF FLAGS, FLANCO
-0072   0008           00165    RETURN
-                      00166    
-0073                  00167 ACT_DISPLAYS
-0073   2???           00168    CALL TABLA_DECO
-0074   00AC           00169    MOVWF AUX_DECO
-0075   3C09           00170    SUBLW .9
-0076   1C03           00171    BTFSS STATUS,C
-0077   2???           00172    GOTO ACCION_DECO
-0078   2???           00173    GOTO NUMERO_DECO
+005C   2???           00140    GOTO ENDINT
+005D   2???           00141    CALL CHECKBITS
+005E   18A6           00142    BTFSC FLAGS, FLANCO
+005F   2???           00143    GOTO ENDINT
+0060   1426           00144    BSF FLAGS, INTRB
+0061   0806           00145    MOVF PORTB, W
+0062   100B           00146    BCF INTCON, 0
+0063   1408           00147    BSF PORTD, 0
+                      00148    ;GOTO ENDINT
+                      00149    
+0064                  00150 TMR0_INT
+0064   110B           00151    BCF INTCON, T0IF
+0065   3064           00152    MOVLW .100
+0066   0081           00153    MOVWF TMR0
+0067   1BAB           00154    BTFSC CONT_D, 7
+0068   2???           00155    GOTO CLR_PORTA
+0069   082D           00156    MOVF DISPCOUNT,W
+006A   2???           00157    CALL TABLA_MUX
+006B   0085           00158    MOVWF PORTA
+006C   082D           00159    MOVF DISPCOUNT,W
+006D   2???           00160    CALL TABLA_REG
+006E   00AE           00161    MOVWF AUX_REG
+006F   082E           00162    MOVF AUX_REG,W
+0070   2???           00163    CALL TABLA_SEGM
+0071   0088           00164    MOVWF PORTD
+0072   0AAD           00165    INCF DISPCOUNT,F
+0073   082D           00166    MOVF DISPCOUNT,W
+0074   022B           00167    SUBWF CONT_D,W
+0075   1803           00168    BTFSC STATUS, C
+0076   2???           00169    GOTO ENDINT
+0077   01AD           00170    CLRF DISPCOUNT
+0078   2???           00171    GOTO ENDINT
+                      00172    
+                      00173    
                       00174    
-                      00175    
-0079                  00176 NUMERO_DECO
-                      00177    
-                      00178    
-0079                  00179 ACCION_DECO
-                      00180    
+0079                  00175 CLR_PORTA
+0079   0185           00176    CLRF PORTA
+007A   01AD           00177    CLRF DISPCOUNT
+007B   2???           00178    GOTO ENDINT
+                      00179    
+007C                  00180 ENDINT
                       00181    
-                      00182    
-0079                  00183 TABLA_DECO
-0079   0782           00184    ADDWF PCL, F
-007A   3401           00185    RETLW .1
-007B   3402           00186    RETLW .2
-007C   3403           00187    RETLW .3
-007D   3404           00188    RETLW .4
-007E   3405           00189    RETLW .5
-007F   3406           00190    RETLW .6 
-0080   3407           00191    RETLW .7
-0081   3408           00192    RETLW .8
-0082   3409           00193    RETLW .9
-0083   340A           00194    RETLW .10 ; TECLA BORRAR (ASTERISCO)
-MPASM 5.87                ED2TPFINAL_SRC.ASM   6-6-2020  18:38:24         PAGE  5
+007C   0EA0           00182    SWAPF W_TEMP,F
+007D   0E20           00183    SWAPF W_TEMP,W
+007E   0E21           00184    SWAPF STATUS_TEMP, W
+007F   0083           00185    MOVWF STATUS
+0080   0009           00186    RETFIE
+                      00187    
+0081                  00188 FINEXP
+0081   0186           00189    CLRF PORTB
+0082   1026           00190    BCF FLAGS, INTRB
+0083   0008           00191    RETURN
+                      00192    
+MPASM 5.87                ED2TPFINAL_SRC.ASM   6-7-2020  13:32:17         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0084   3400           00195    RETLW .0
-0085   340B           00196    RETLW .11 ; TECLA ACEPTAR (NUMERAL)
-                      00197    
-3FF2 3FFF             00198    END
-MPASM 5.87                ED2TPFINAL_SRC.ASM   6-6-2020  18:38:24         PAGE  6
+0084                  00193 EN_ROW
+0084   0782           00194    ADDWF PCL, F
+0085   34E0           00195    RETLW 0xE0; COL0
+0086   34D0           00196    RETLW 0xD0; COL1                
+0087   34B0           00197    RETLW 0xB0; COL2
+0088   3470           00198    RETLW 0x70; COL3
+                      00199    
+0089                  00200 CHECKBITS
+0089   14A6           00201    BSF FLAGS, FLANCO ; BIT DE BANDERA DE CAMBIO DE FLANCO
+008A   1C06           00202    BTFSS PORTB, 0
+008B   10A6           00203    BCF FLAGS, FLANCO
+008C   1C86           00204    BTFSS PORTB, 1
+008D   10A6           00205    BCF FLAGS, FLANCO
+008E   1D06           00206    BTFSS PORTB, 2
+008F   10A6           00207    BCF FLAGS, FLANCO
+0090   1D86           00208    BTFSS PORTB, 3
+0091   10A6           00209    BCF FLAGS, FLANCO
+0092   0008           00210    RETURN
+                      00211    
+0093                  00212 ACT_DISPLAYS
+0093   2???           00213    CALL TABLA_DECO
+0094   00AC           00214    MOVWF AUX_DECO
+0095   3C09           00215    SUBLW .9
+0096   1C03           00216    BTFSS STATUS,C
+0097   2???           00217    GOTO ACCION_DECO
+0098   2???           00218    GOTO NUMERO_DECO
+                      00219    
+                      00220    
+0099                  00221 NUMERO_DECO
+0099   082B           00222    MOVF CONT_D,W
+009A   3C03           00223    SUBLW .3
+009B   1903           00224    BTFSC STATUS, Z
+009C   0008           00225    RETURN
+009D   082C           00226    MOVF AUX_DECO,W
+009E   0080           00227    MOVWF INDF
+009F   0AAB           00228    INCF  CONT_D,F
+00A0   0A84           00229    INCF FSR,F
+00A1   0008           00230    RETURN
+                      00231    
+00A2                  00232 ACCION_DECO
+00A2   1C2C           00233    BTFSS AUX_DECO, 0 ; .10=1010 Y .11=1011
+00A3   2???           00234    GOTO BORRAR_TECLA
+00A4   2???           00235    GOTO ACEPTAR_TECLA
+                      00236    
+                      00237    
+00A5                  00238 ACEPTAR_TECLA
+                      00239    
+00A5                  00240 BORRAR_TECLA
+00A5   1BAB           00241    BTFSC CONT_D , 7
+00A6   0008           00242    RETURN
+00A7   0384           00243    DECF FSR,F
+Message[305]: Using default destination of 1 (file).
+00A8   03AB           00244    DECF CONT_D
+MPASM 5.87                ED2TPFINAL_SRC.ASM   6-7-2020  13:32:17         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00A9   0008           00245    RETURN
+                      00246  
+                      00247    
+                      00248 
+00AA                  00249 TABLA_MUX
+00AA   0782           00250    ADDWF PCL, F
+00AB   3401           00251    RETLW 0x01 ; DISPLAY 0
+00AC   3402           00252    RETLW 0x02 ; DISPLAY 1
+00AD   3404           00253    RETLW 0x04 ; DISPLAY 2
+00AE   3408           00254    RETLW 0x08 ; DISPLAY 3
+                      00255 
+00AF                  00256 TABLA_REG
+00AF   0782           00257    ADDWF PCL, F
+00B0   3427           00258    RETLW DISPLAY0
+00B1   3428           00259    RETLW DISPLAY1
+00B2   3429           00260    RETLW DISPLAY2
+00B3   342A           00261    RETLW DISPLAY3
+                      00262    
+00B4                  00263 TABLA_SEGM
+00B4   0782           00264     ADDWF PCL, F
+00B5   343F           00265     RETLW 0x3F; 0
+00B6   3406           00266     RETLW 0x06; 1
+00B7   345B           00267     RETLW 0x5B; 2
+00B8   344F           00268     RETLW 0x4F; 3
+00B9   3466           00269     RETLW 0x66; 4
+00BA   346D           00270     RETLW 0x6D; 5
+00BB   347D           00271     RETLW 0x7D; 6
+00BC   3407           00272     RETLW 0x07; 7
+00BD   347F           00273     RETLW 0x7F; 8
+00BE   346F           00274     RETLW 0x6F; 9   
+                      00275    
+00BF                  00276 TABLA_DECO
+00BF   0782           00277    ADDWF PCL, F
+00C0   3401           00278    RETLW .1
+00C1   3402           00279    RETLW .2
+00C2   3403           00280    RETLW .3
+00C3   3404           00281    RETLW .4
+00C4   3405           00282    RETLW .5
+00C5   3406           00283    RETLW .6 
+00C6   3407           00284    RETLW .7
+00C7   3408           00285    RETLW .8
+00C8   3409           00286    RETLW .9
+00C9   340A           00287    RETLW .10 ; TECLA BORRAR (ASTERISCO)
+00CA   3400           00288    RETLW .0
+00CB   340B           00289    RETLW .11 ; TECLA ACEPTAR (NUMERAL)
+                      00290    
+3FF2 3FFF             00291    END
+MPASM 5.87                ED2TPFINAL_SRC.ASM   6-7-2020  13:32:17         PAGE  7
 
 
 SYMBOL TABLE
@@ -252,11 +354,12 @@ SYMBOL TABLE
 
 ABDEN                             00000000
 ABDOVF                            00000007
-ACCION_DECO                       00000079
+ACCION_DECO                       000000A2
+ACEPTAR_TECLA                     000000A5
 ACKDT                             00000005
 ACKEN                             00000004
 ACKSTAT                           00000006
-ACT_DISPLAYS                      00000073
+ACT_DISPLAYS                      00000093
 ADCON0                            0000001F
 ADCON1                            0000009F
 ADCS0                             00000006
@@ -285,10 +388,12 @@ ANS9                              00000001
 ANSEL                             00000188
 ANSELH                            00000189
 AUX_DECO                          0000002C
+AUX_REG                           0000002E
 BAUDCTL                           00000187
 BCLIE                             00000003
 BCLIF                             00000003
 BF                                00000000
+BORRAR_TECLA                      000000A5
 BRG0                              00000000
 BRG1                              00000001
 BRG10                             00000002
@@ -300,15 +405,15 @@ BRG15                             00000007
 BRG16                             00000003
 BRG2                              00000002
 BRG3                              00000003
-BRG4                              00000004
-BRG5                              00000005
-BRG6                              00000006
-MPASM 5.87                ED2TPFINAL_SRC.ASM   6-6-2020  18:38:24         PAGE  7
+MPASM 5.87                ED2TPFINAL_SRC.ASM   6-7-2020  13:32:17         PAGE  8
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+BRG4                              00000004
+BRG5                              00000005
+BRG6                              00000006
 BRG7                              00000007
 BRG8                              00000000
 BRG9                              00000001
@@ -359,27 +464,28 @@ CCPR1                             00000015
 CCPR1H                            00000016
 CCPR1L                            00000015
 CCPR2                             0000001B
-CCPR2H                            0000001C
-CCPR2L                            0000001B
-CHECKBITS                         00000069
-MPASM 5.87                ED2TPFINAL_SRC.ASM   6-6-2020  18:38:24         PAGE  8
+MPASM 5.87                ED2TPFINAL_SRC.ASM   6-7-2020  13:32:17         PAGE  9
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-CHECK_TECLADO                     00000027
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHECKBITS                         00000089
+CHECK_TECLADO                     0000002D
 CHS0                              00000002
 CHS1                              00000003
 CHS2                              00000004
 CHS3                              00000005
 CKE                               00000006
 CKP                               00000004
+CLR_PORTA                         00000079
 CM1CON0                           00000107
 CM2CON0                           00000108
 CM2CON1                           00000109
 COLUMN                            00000022
-COL_DEC                           00000037
+COL_DEC                           0000003D
 COL_EN                            00000024
 COL_EN_T                          00000025
 CONT_D                            0000002B
@@ -392,6 +498,7 @@ DC1B0                             00000004
 DC1B1                             00000005
 DC2B0                             00000004
 DC2B1                             00000005
+DISPCOUNT                         0000002D
 DISPLAY0                          00000027
 DISPLAY1                          00000028
 DISPLAY2                          00000029
@@ -413,20 +520,20 @@ EEDATH                            0000010E
 EEIE                              00000004
 EEIF                              00000004
 EEPGD                             00000007
-ENDINT                            0000005C
-EN_ROW                            00000064
+ENDINT                            0000007C
+EN_ROW                            00000084
 F                                 00000001
-FERR                              00000002
-FINEXP                            00000061
-FLAGS                             00000026
-FLANCO                            00000001
-FSR                               00000004
-MPASM 5.87                ED2TPFINAL_SRC.ASM   6-6-2020  18:38:24         PAGE  9
+MPASM 5.87                ED2TPFINAL_SRC.ASM   6-7-2020  13:32:17         PAGE 10
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+FERR                              00000002
+FINEXP                            00000081
+FLAGS                             00000026
+FLANCO                            00000001
+FSR                               00000004
 FVREN                             00000000
 GCEN                              00000007
 GIE                               00000007
@@ -443,7 +550,7 @@ INIT                              00000005
 INTCON                            0000000B
 INTE                              00000004
 INTEDG                            00000006
-INTERRUPT_SERVE                   00000050
+INTERRUPT_SERVE                   00000056
 INTF                              00000001
 INTRB                             00000000
 IOCB                              00000096
@@ -475,23 +582,23 @@ NOT_A                             00000005
 NOT_ADDRESS                       00000005
 NOT_BO                            00000000
 NOT_BOR                           00000000
-NOT_DONE                          00000001
-NOT_PD                            00000003
-NOT_POR                           00000001
-NOT_RBPU                          00000007
-NOT_RC8                           00000006
-MPASM 5.87                ED2TPFINAL_SRC.ASM   6-6-2020  18:38:24         PAGE 10
+MPASM 5.87                ED2TPFINAL_SRC.ASM   6-7-2020  13:32:17         PAGE 11
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+NOT_DONE                          00000001
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
 NOT_T1SYNC                        00000002
 NOT_TO                            00000004
 NOT_TX8                           00000006
 NOT_W                             00000002
 NOT_WRITE                         00000002
-NUMERO_DECO                       00000079
+NUMERO_DECO                       00000099
 N_COL                             00000003
 N_ROW                             00000004
 OERR                              00000001
@@ -526,7 +633,7 @@ PORTC                             00000007
 PORTD                             00000008
 PORTE                             00000009
 PR2                               00000092
-PROGRAMA                          00000022
+PROGRAMA                          00000028
 PRSEN                             00000007
 PS0                               00000000
 PS1                               00000001
@@ -534,17 +641,17 @@ PS2                               00000002
 PSA                               00000003
 PSSAC0                            00000002
 PSSAC1                            00000003
-PSSBD0                            00000000
-PSSBD1                            00000001
-PSTRCON                           0000009D
-PULSR                             00000002
-PULSS                             00000003
-MPASM 5.87                ED2TPFINAL_SRC.ASM   6-6-2020  18:38:24         PAGE 11
+MPASM 5.87                ED2TPFINAL_SRC.ASM   6-7-2020  13:32:17         PAGE 12
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+PSSBD0                            00000000
+PSSBD1                            00000001
+PSTRCON                           0000009D
+PULSR                             00000002
+PULSS                             00000003
 PWM1CON                           0000009B
 R                                 00000002
 RA0                               00000000
@@ -593,17 +700,17 @@ RD6                               00000006
 RD7                               00000007
 RE0                               00000000
 RE1                               00000001
-RE2                               00000002
-RE3                               00000003
-READ_WRITE                        00000002
-ROW                               00000023
-ROW_DEC                           00000041
-MPASM 5.87                ED2TPFINAL_SRC.ASM   6-6-2020  18:38:24         PAGE 12
+MPASM 5.87                ED2TPFINAL_SRC.ASM   6-7-2020  13:32:17         PAGE 13
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+RE2                               00000002
+RE3                               00000003
+READ_WRITE                        00000002
+ROW                               00000023
+ROW_DEC                           00000047
 RP0                               00000005
 RP1                               00000006
 RSEN                              00000001
@@ -652,17 +759,17 @@ T0CS                              00000005
 T0IE                              00000005
 T0IF                              00000002
 T0SE                              00000004
-T1CKPS0                           00000004
-T1CKPS1                           00000005
-T1CON                             00000010
-T1GINV                            00000007
-T1GIV                             00000007
-MPASM 5.87                ED2TPFINAL_SRC.ASM   6-6-2020  18:38:24         PAGE 13
+MPASM 5.87                ED2TPFINAL_SRC.ASM   6-7-2020  13:32:17         PAGE 14
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1GINV                            00000007
+T1GIV                             00000007
 T1GSS                             00000001
 T1INSYNC                          00000002
 T1OSCEN                           00000003
@@ -670,10 +777,14 @@ T1SYNC                            00000002
 T2CKPS0                           00000000
 T2CKPS1                           00000001
 T2CON                             00000012
-TABLA_DECO                        00000079
+TABLA_DECO                        000000BF
+TABLA_MUX                         000000AA
+TABLA_REG                         000000AF
+TABLA_SEGM                        000000B4
 TMR0                              00000001
 TMR0IE                            00000005
 TMR0IF                            00000002
+TMR0_INT                          00000064
 TMR1                              0000000E
 TMR1CS                            00000001
 TMR1GE                            00000006
@@ -707,6 +818,12 @@ TRISB3                            00000003
 TRISB4                            00000004
 TRISB5                            00000005
 TRISB6                            00000006
+MPASM 5.87                ED2TPFINAL_SRC.ASM   6-7-2020  13:32:17         PAGE 15
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 TRISB7                            00000007
 TRISC                             00000087
 TRISC0                            00000000
@@ -716,12 +833,6 @@ TRISC3                            00000003
 TRISC4                            00000004
 TRISC5                            00000005
 TRISC6                            00000006
-MPASM 5.87                ED2TPFINAL_SRC.ASM   6-6-2020  18:38:24         PAGE 14
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 TRISC7                            00000007
 TRISD                             00000088
 TRISD0                            00000000
@@ -766,6 +877,12 @@ VRCON                             00000097
 VREN                              00000007
 VROE                              00000006
 VRR                               00000005
+MPASM 5.87                ED2TPFINAL_SRC.ASM   6-7-2020  13:32:17         PAGE 16
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 VRSS                              00000004
 W                                 00000000
 WCOL                              00000007
@@ -775,12 +892,6 @@ WDTPS1                            00000002
 WDTPS2                            00000003
 WDTPS3                            00000004
 WPUB                              00000095
-MPASM 5.87                ED2TPFINAL_SRC.ASM   6-6-2020  18:38:24         PAGE 15
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 WPUB0                             00000000
 WPUB1                             00000001
 WPUB2                             00000002
@@ -825,6 +936,12 @@ _FCMEN_OFF                        000037FF
 _FCMEN_ON                         00003FFF
 _FOSC_EC                          00003FFB
 _FOSC_EXTRC_CLKOUT                00003FFF
+MPASM 5.87                ED2TPFINAL_SRC.ASM   6-7-2020  13:32:17         PAGE 17
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
 _FOSC_EXTRC_NOCLKOUT              00003FFE
 _FOSC_HS                          00003FFA
 _FOSC_INTRC_CLKOUT                00003FFD
@@ -834,12 +951,6 @@ _FOSC_XT                          00003FF9
 _HS_OSC                           00003FFA
 _IDLOC0                           00002000
 _IDLOC1                           00002001
-MPASM 5.87                ED2TPFINAL_SRC.ASM   6-6-2020  18:38:24         PAGE 16
-
-
-SYMBOL TABLE
-  LABEL                             VALUE 
-
 _IDLOC2                           00002002
 _IDLOC3                           00002003
 _IESO_OFF                         00003BFF
@@ -868,6 +979,6 @@ __16F887                          00000001
 
 Errors   :     0
 Warnings :     0 reported,     0 suppressed
-Messages :     7 reported,     0 suppressed
+Messages :    10 reported,     0 suppressed
 
 
