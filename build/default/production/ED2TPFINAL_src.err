@@ -1,10 +1,11 @@
-Message[302] E:\DOCUMENTOS\FACU\4TO AÒO\ELECTRONICA DIGITAL 2\TPFINAL\ED2TPFINAL\ED2TPFINAL_SRC.ASM 42 : Register in operand not in bank 0.  Ensure that bank bits are correct.
 Message[302] E:\DOCUMENTOS\FACU\4TO AÒO\ELECTRONICA DIGITAL 2\TPFINAL\ED2TPFINAL\ED2TPFINAL_SRC.ASM 43 : Register in operand not in bank 0.  Ensure that bank bits are correct.
 Message[302] E:\DOCUMENTOS\FACU\4TO AÒO\ELECTRONICA DIGITAL 2\TPFINAL\ED2TPFINAL\ED2TPFINAL_SRC.ASM 44 : Register in operand not in bank 0.  Ensure that bank bits are correct.
 Message[302] E:\DOCUMENTOS\FACU\4TO AÒO\ELECTRONICA DIGITAL 2\TPFINAL\ED2TPFINAL\ED2TPFINAL_SRC.ASM 45 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] E:\DOCUMENTOS\FACU\4TO AÒO\ELECTRONICA DIGITAL 2\TPFINAL\ED2TPFINAL\ED2TPFINAL_SRC.ASM 46 : Register in operand not in bank 0.  Ensure that bank bits are correct.
 Message[302] E:\DOCUMENTOS\FACU\4TO AÒO\ELECTRONICA DIGITAL 2\TPFINAL\ED2TPFINAL\ED2TPFINAL_SRC.ASM 47 : Register in operand not in bank 0.  Ensure that bank bits are correct.
 Message[302] E:\DOCUMENTOS\FACU\4TO AÒO\ELECTRONICA DIGITAL 2\TPFINAL\ED2TPFINAL\ED2TPFINAL_SRC.ASM 49 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] E:\DOCUMENTOS\FACU\4TO AÒO\ELECTRONICA DIGITAL 2\TPFINAL\ED2TPFINAL\ED2TPFINAL_SRC.ASM 50 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] E:\DOCUMENTOS\FACU\4TO AÒO\ELECTRONICA DIGITAL 2\TPFINAL\ED2TPFINAL\ED2TPFINAL_SRC.ASM 68 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[302] E:\DOCUMENTOS\FACU\4TO AÒO\ELECTRONICA DIGITAL 2\TPFINAL\ED2TPFINAL\ED2TPFINAL_SRC.ASM 72 : Register in operand not in bank 0.  Ensure that bank bits are correct.
-Message[305] E:\DOCUMENTOS\FACU\4TO AÒO\ELECTRONICA DIGITAL 2\TPFINAL\ED2TPFINAL\ED2TPFINAL_SRC.ASM 244 : Using default destination of 1 (file).
+Message[302] E:\DOCUMENTOS\FACU\4TO AÒO\ELECTRONICA DIGITAL 2\TPFINAL\ED2TPFINAL\ED2TPFINAL_SRC.ASM 51 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] E:\DOCUMENTOS\FACU\4TO AÒO\ELECTRONICA DIGITAL 2\TPFINAL\ED2TPFINAL\ED2TPFINAL_SRC.ASM 52 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] E:\DOCUMENTOS\FACU\4TO AÒO\ELECTRONICA DIGITAL 2\TPFINAL\ED2TPFINAL\ED2TPFINAL_SRC.ASM 71 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] E:\DOCUMENTOS\FACU\4TO AÒO\ELECTRONICA DIGITAL 2\TPFINAL\ED2TPFINAL\ED2TPFINAL_SRC.ASM 75 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[305] E:\DOCUMENTOS\FACU\4TO AÒO\ELECTRONICA DIGITAL 2\TPFINAL\ED2TPFINAL\ED2TPFINAL_SRC.ASM 256 : Using default destination of 1 (file).
